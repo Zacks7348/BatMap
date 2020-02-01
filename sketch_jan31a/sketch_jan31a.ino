@@ -60,7 +60,6 @@ void batMap() {
     //Reset counter back to the current time
     lastRead = millis();
   }
-  Serial.println(ON);
 }
 
 void loop() {
