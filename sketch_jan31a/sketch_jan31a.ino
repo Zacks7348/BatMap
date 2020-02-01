@@ -1,4 +1,3 @@
-
 #define INTERVAL 500 //Times between reads
 unsigned long lastRead = 0;
 
@@ -8,7 +7,6 @@ const int echoPin = 10;
 //Ultrasonic Variables
 float duration, distance;
 
-
 // Button constants won't change. They're used here to set pin numbers:
 const int buttonPin = 2;     // the number of the pushbutton pin
 const int ledPin =  13;      // the number of the LED pin
@@ -16,29 +14,31 @@ const int ledPin =  13;      // the number of the LED pin
 // Button Variables
 int buttonState = 0;         // variable for reading the pushbutton status
 boolean ON = false;
-boolean pressed = false;
 
-
-//Bluetooth Constants
-const int bluetoothPin = ;
-const int 
-
-
+//Bluetooth Variables
+#include <SoftwareSerial.h>
+SoftwareSerial hc06(2,3);
 
 void setup() {
+  Serial.begin(9600);
   // initialize the pushbutton pin as an input:
   pinMode(buttonPin, INPUT);
 
   //Initialize the Sensor
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
-  Serial.begin(9600);
 
-
+  //Initialize bluetooth
+  hc06.begin(9600);
 }
 
-void ultrasonic() {
+void batMap() {
   //Slow down how often the distance is measured
+  if (hc06.read() != -1) {
+    if (digitalRead(buttonPin) == 1) {
+      ON = !ON;
+    }
+  }
   if ((millis() - lastRead >= INTERVAL) and ON) {
     digitalWrite(trigPin, LOW);
     delayMicroseconds(2);
@@ -54,27 +54,15 @@ void ultrasonic() {
     if (distance < 500) {
       Serial.print("Distance: ");
       Serial.println(distance);
+      hc06.print(distance);
     }
     delay(100);
     //Reset counter back to the current time
     lastRead = millis();
-
   }
-}
-
-void status() {
-  buttonState = digitalRead(buttonPin);
-  if (buttonState == HIGH and !pressed) {
-    ON = !ON;
-    Serial.println("Status change");
-    pressed = !pressed;
-  }
-  else if (buttonState == LOW and pressed) {
-    pressed = !pressed;
-  }
+  Serial.println(ON);
 }
 
 void loop() {
-  status();
-  ultrasonic();
+  batMap();
 }
