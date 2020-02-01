@@ -2,21 +2,36 @@
 #define INTERVAL 500 //Times between reads
 unsigned long lastRead = 0;
 
-
+//Initialize
 const int trigPin = 9;
 const int echoPin = 10;
+
+// constants won't change. They're used here to set pin numbers:
+const int buttonPin = 2;     // the number of the pushbutton pin
+const int ledPin =  13;      // the number of the LED pin
+
+// variables will change:
+int buttonState = 0;         // variable for reading the pushbutton status
+boolean ON = false;
+boolean pressed = false;
 
 float duration, distance;
 
 void setup() {
+  // initialize the pushbutton pin as an input:
+  pinMode(buttonPin, INPUT);
+
+  //Initialize the Sensor
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
   Serial.begin(9600);
+
+
 }
 
-void loop() {
+void ultrasonic() {
   //Slow down how often the distance is measured
-  if (millis() - lastRead >= INTERVAL) {
+  if ((millis() - lastRead >= INTERVAL) and ON) {
     digitalWrite(trigPin, LOW);
     delayMicroseconds(2);
     digitalWrite(trigPin, HIGH);
@@ -37,5 +52,21 @@ void loop() {
     lastRead = millis();
 
   }
+}
 
+void status() {
+  buttonState = digitalRead(buttonPin);
+  if (buttonState == HIGH and !pressed) {
+    ON = !ON;
+    Serial.println("Status change");
+    pressed = !pressed;
+  }
+  else if (buttonState == LOW and pressed) {
+    pressed = !pressed;
+  }
+}
+
+void loop() {
+  status();
+  ultrasonic();
 }
