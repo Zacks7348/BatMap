@@ -2,20 +2,28 @@
 #define INTERVAL 500 //Times between reads
 unsigned long lastRead = 0;
 
-//Initialize
+// Ultrasonic Constants
 const int trigPin = 9;
 const int echoPin = 10;
+//Ultrasonic Variables
+float duration, distance;
 
-// constants won't change. They're used here to set pin numbers:
+
+// Button constants won't change. They're used here to set pin numbers:
 const int buttonPin = 2;     // the number of the pushbutton pin
 const int ledPin =  13;      // the number of the LED pin
 
-// variables will change:
+// Button Variables
 int buttonState = 0;         // variable for reading the pushbutton status
 boolean ON = false;
 boolean pressed = false;
 
-float duration, distance;
+
+//Bluetooth Constants
+const int bluetoothPin = ;
+const int 
+
+
 
 void setup() {
   // initialize the pushbutton pin as an input:
